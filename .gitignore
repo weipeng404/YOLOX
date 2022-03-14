@@ -219,3 +219,10 @@ events.out.tfevents*
 
 # vim
 .vim
+
+*.DS_Store
+
+# pretrained models
+yolox-pretrained-models/
+
+Test.ipynb
