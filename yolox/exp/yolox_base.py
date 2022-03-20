@@ -30,8 +30,8 @@ class Exp(BaseExp):
         # set worker to 4 for shorter dataloader init time
         # If your training process cost many memory, reduce this value.
         self.data_num_workers = 4
-        self.input_size = (640, 640)  # (height, width)
-        # Actual multiscale ranges: [640 - 5 * 32, 640 + 5 * 32].
+        self.input_size = (1000, 2000)  # (height, width)
+        # Actual multiscale ranges: [1000 - 5 * 32, 2000 + 5 * 32].
         # To disable multiscale training, set the value to 0.
         self.multiscale_range = 5
         # You can uncomment this line to specify a multiscale range
@@ -100,7 +100,7 @@ class Exp(BaseExp):
 
         # -----------------  testing config ------------------ #
         # output image size during evaluation/test
-        self.test_size = (640, 640)
+        self.test_size = (1000, 2000)
         # confidence threshold during evaluation/test,
         # boxes whose scores are less than test_conf will be filtered
         self.test_conf = 0.01
