@@ -49,10 +49,10 @@ class NilarDefectsDetection(VOCDetection):
 		self.annotations = [self.load_anno_from_ids(_id) for _id in range(len(self.ids))]
 		self.imgs = None
 
-	def load_image(self, index):
-		img_id = self.ids[index]
-		img = cv2.imread(self._imgpath % img_id, cv2.IMREAD_GRAYSCALE)
-		assert img is not None
+# 	def load_image(self, index):
+# 		img_id = self.ids[index]
+# 		img = cv2.imread(self._imgpath % img_id, cv2.IMREAD_GRAYSCALE)
+# 		assert img is not None
 
-		return img
+# 		return img
 

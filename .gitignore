@@ -225,4 +225,3 @@ events.out.tfevents*
 # pretrained models
 yolox-pretrained-models/
 
-Test.ipynb

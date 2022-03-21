@@ -7,3 +7,5 @@ from .coco_classes import COCO_CLASSES
 from .datasets_wrapper import ConcatDataset, Dataset, MixConcatDataset
 from .mosaicdetection import MosaicDetection
 from .voc import VOCDetection
+from .nilar_classes import NILAR_CLASSES
+from .nilar import NilarDefectsDetection

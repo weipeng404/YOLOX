@@ -10,6 +10,7 @@ import torch.distributed as dist
 import torch.nn as nn
 
 from .base_exp import BaseExp
+from yolox.data import get_yolox_datadir
 
 
 class Exp(BaseExp):
@@ -37,13 +38,13 @@ class Exp(BaseExp):
         # You can uncomment this line to specify a multiscale range
         # self.random_size = (14, 26)
         # dir of dataset images, if data_dir is None, this project will use `datasets` dir
-        self.data_dir = None
+        self.data_dir = get_yolox_datadir()
         # name of annotation file for training
-        self.train_ann = "instances_train2017.json"
+        self.train_ann = "train.txt"
         # name of annotation file for evaluation
-        self.val_ann = "instances_val2017.json"
+        self.val_ann = "val.txt"
         # name of annotation file for testing
-        self.test_ann = "instances_test2017.json"
+        self.test_ann = "test.txt"
 
         # --------------- transform config ----------------- #
         # prob of applying mosaic aug
