@@ -24,7 +24,7 @@ class NilarDefectsDetection(VOCDetection):
 		self, 
 		data_dir, 
 		image_set,
-		img_size = (1000, 2000),
+		img_size = (640, 1280),
 		preproc = None,
 		target_transform = AnnotationTransform(
 			class_to_ind = dict(zip(NILAR_CLASSES, range(len(NILAR_CLASSES))))

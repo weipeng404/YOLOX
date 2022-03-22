@@ -90,12 +90,16 @@ class YOLOPAFPN(nn.Module):
         """
 
         #  backbone
+        # print("input shape: ", input.shape)
         out_features = self.backbone(input)
         features = [out_features[f] for f in self.in_features]
         [x2, x1, x0] = features
+        # print("features shapes: \nx2- ", x2.shape, "\nx1- ", x1.shape, "\nx0- ", x0.shape)
 
         fpn_out0 = self.lateral_conv0(x0)  # 1024->512/32
+        # print("fpn_out0: ", fpn_out0.shape)
         f_out0 = self.upsample(fpn_out0)  # 512/16
+        # print(f_out0.shape, x1.shape)
         f_out0 = torch.cat([f_out0, x1], 1)  # 512->1024/16
         f_out0 = self.C3_p4(f_out0)  # 1024->512/16
 
