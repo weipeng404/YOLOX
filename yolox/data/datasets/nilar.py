@@ -4,7 +4,7 @@
 import os
 import cv2
 import numpy as np
-# import xml.etree.ElementTree as ET
+import pickle
 
 from .nilar_classes import NILAR_CLASSES
 from .voc import AnnotationTransform, VOCDetection
@@ -24,7 +24,7 @@ class NilarDefectsDetection(VOCDetection):
 		self, 
 		data_dir, 
 		image_set,
-		img_size = (640, 1280),
+		img_size = (960, 1920),
 		preproc = None,
 		target_transform = AnnotationTransform(
 			class_to_ind = dict(zip(NILAR_CLASSES, range(len(NILAR_CLASSES))))
@@ -42,7 +42,7 @@ class NilarDefectsDetection(VOCDetection):
 		self.ids = list()
 
 		for line in open(
-			os.path.join(self.root, "ImageSets", "Main", image_set + ".txt")
+			os.path.join(self.root, "ImageSets", "Main", self.image_set + ".txt")
 		):
 			self.ids.append((self.root, line.strip()))
 
@@ -56,3 +56,75 @@ class NilarDefectsDetection(VOCDetection):
 
 # 		return img
 
+	def _get_voc_results_file_template(self):
+		filename = "comp4_det_test" + "_{:s}.txt"
+		filedir = os.path.join(self.root, "results", "Main")
+		if not os.path.exists(filedir):
+			os.makedirs(filedir)
+		filepath = os.path.join(filedir, filename)
+		return filepath
+
+	def _write_voc_results_file(self, all_boxes):
+		for cls_ind, cls in enumerate(NILAR_CLASSES):
+			# if cls == "NoDefects":
+			# 	continue
+			print("Writing {} VOC results file.".format(cls))
+			filepath = self._get_voc_results_file_template().format(cls)
+			with open(filepath, 'wt') as f:
+				for im_ind, index in enumerate(self.ids):
+					index = index[1] # image name in imageSet
+					dets = all_boxes[cls_ind][im_ind]
+					if dets == []:
+						continue
+					for k in range(dets.shape[0]):
+						f.write(
+							"{:s} {:.3f} {:.1f} {:.1f} {:.1f} {:.1f}\n".format(
+                                index,
+                                dets[k, -1], # confidence
+                                dets[k, 0] + 1, # xmin
+                                dets[k, 1] + 1, # ymin
+                                dets[k, 2] + 1, # xmax
+                                dets[k, 3] + 1, # ymax
+                            )
+						)
+
+	def _do_python_eval(self, output_dir="output", iou=0.5):
+		annopath = os.path.join(self.root, "Annotations", "{:s}.xml")
+		imagesetfile = os.path.join(self.root, "ImageSets", "Main", self.image_set + ".txt")
+		cachedir = os.path.join(self.root, "annotation_cache", self.image_set)
+		if not os.path.exists(cachedir):
+			os.makedirs(cachedir)
+
+		aps = []
+		print("Eval IoU: {:.2f}".format(iou))
+		if output_dir is not None and not os.path.isdir(output_dir):
+			os.mkdir(output_dir)
+		for i, cls in enumerate(NILAR_CLASSES):
+			# if cls == "NoDefects":
+			# 	continue
+			filepath = self._get_voc_results_file_template().format(cls)
+			rec, prec, ap = voc_eval(
+				detpath = filepath,
+				annopath = annopath,
+				imagesetfile = imagesetfile,
+				classname = cls,
+				cachedir = cachedir,
+				ovthresh = iou,
+				use_07_metric=False,
+			)
+			aps += [ap]
+			if iou == 0.5:
+				print("AP for {} = {:.4f}".format(cls, ap))
+			if output_dir is not None:
+				with open(os.path.join(output_dir, cls + "_pr.pkl"), "wb") as f:
+					pickle.dump({"rec": rec, "prec": prec, "ap": ap}, f)
+
+		if iou == 0.5:
+			print("For IoU = 0.5, mAP = {:.4f}".format(np.mean(aps)))
+			print("----------")
+			print("Resutls:")
+			for i, cls in enumerate(NILAR_CLASSES):
+				print("{:s}:\t{:.3f}").format(cls, ap)
+			print("----------")
+
+		return np.mean(aps)
