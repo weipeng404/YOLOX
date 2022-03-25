@@ -2,7 +2,7 @@
 # -*- coding:utf-8 -*-
 
 NILAR_CLASSES = (
-    "NoDefects",
+    # "NoDefects",
 	"Crack",
 	"ElectrodeResidue",
 	"BitPlate",

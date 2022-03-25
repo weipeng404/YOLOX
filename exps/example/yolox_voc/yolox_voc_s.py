@@ -46,7 +46,7 @@ class Exp(MyExp):
         with wait_for_the_master(local_rank):
             dataset = NilarDefectsDetection(
                 data_dir = get_yolox_datadir(),
-                image_set = 'train',
+                image_set = 'trainval',
                 img_size = self.input_size,
                 preproc=TrainTransform(
                     max_labels=50,

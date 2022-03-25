@@ -6,6 +6,8 @@ import cv2
 import numpy as np
 import pickle
 
+from yolox.evaluators.voc_eval import voc_eval
+
 from .nilar_classes import NILAR_CLASSES
 from .voc import AnnotationTransform, VOCDetection
 
@@ -124,7 +126,7 @@ class NilarDefectsDetection(VOCDetection):
 			print("----------")
 			print("Resutls:")
 			for i, cls in enumerate(NILAR_CLASSES):
-				print("{:s}:\t{:.3f}").format(cls, ap)
+				print("{:s}:\t{:.3f}".format(cls, ap))
 			print("----------")
 
 		return np.mean(aps)
