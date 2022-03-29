@@ -115,8 +115,8 @@ class NilarDefectsDetection(VOCDetection):
 				use_07_metric=False,
 			)
 			aps += [ap]
-			if iou == 0.5:
-				print("AP for {} = {:.4f}".format(cls, ap))
+			# if iou == 0.5:
+			# 	print("AP for {} = {:.4f}".format(cls, ap))
 			if output_dir is not None:
 				with open(os.path.join(output_dir, cls + "_pr.pkl"), "wb") as f:
 					pickle.dump({"rec": rec, "prec": prec, "ap": ap}, f)
@@ -124,9 +124,9 @@ class NilarDefectsDetection(VOCDetection):
 		if iou == 0.5:
 			print("For IoU = 0.5, mAP = {:.4f}".format(np.mean(aps)))
 			print("----------")
-			print("Resutls:")
+			print("Results:")
 			for i, cls in enumerate(NILAR_CLASSES):
-				print("{:s}:\t{:.3f}".format(cls, ap))
+				print("AP for {:s}:\t{:.3f}".format(cls, aps[i]))
 			print("----------")
 
 		return np.mean(aps)
