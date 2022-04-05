@@ -8,6 +8,7 @@ from lxml import etree
 
 import torch
 
+import yolox
 from yolox.data.data_augment import ValTransform
 from yolox.data.datasets import NILAR_CLASSES
 from yolox.exp import get_exp
@@ -78,9 +79,9 @@ def image_demo(predictor, vis_folder, xml_folder, path, current_time, save_resul
             save_file_name = os.path.join(save_folder, os.path.basename(image_name))
             logger.info("Saving detection result in {}".format(save_file_name))
             cv2.imwrite(save_file_name, result_image)
-        ch = cv2.waitKey(0)
-        if ch == 27 or ch == ord("q") or ch == ord("Q"):
-            break
+        # ch = cv2.waitKey(0)
+        # if ch == 27 or ch == ord("q") or ch == ord("Q"):
+        #     break
 
         if save_xml:
             write_xml(
