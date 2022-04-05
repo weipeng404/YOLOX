@@ -12,9 +12,10 @@ import yolox
 from yolox.data.data_augment import ValTransform
 from yolox.data.datasets import NILAR_CLASSES
 from yolox.exp import get_exp
-from yolox.tools.demo import Predictor, get_image_list, image_demo
+from yolox.tools.demo import Predictor, image_demo
 from yolox.utils import get_model_info
 
+IMAGE_EXT = [".jpg", ".jpeg", ".webp", ".bmp", ".png"]
 
 def make_parser():
     parser = argparse.ArgumentParser(description="YOLOX Demo for Nilar!")
@@ -23,6 +24,7 @@ def make_parser():
     parser.add_argument("-f", "--exp_file", default="exps/example/yolox_voc/yolox_voc_s.py", type=str, help="experiment description file")
     parser.add_argument("-c", "--ckpt", default="YOLOX_outputs/yolox_voc_s/best_ckpt.pth", type=str, help="checkpoint model for evaluation")
     parser.add_argument("--path", help="path to images")
+    parser.add_argument("--layer", default=None, type=int, nargs='*', help="predict only specific layers")
     parser.add_argument("--conf", default=0.3, type=float, help="test confidence")
     parser.add_argument("--nms", default=0.3, type=float, help="test nms threshold")
     parser.add_argument("--tsize", default=[960, 1920], type=int, nargs='*', help="test height and width")
@@ -61,9 +63,26 @@ def make_parser():
     )
     return parser
 
-def image_demo(predictor, vis_folder, xml_folder, path, current_time, save_result, save_xml):
+def get_image_list(path, layer=None):
+    image_list = []
+    for maindir, subdir, file_name_list in os.walk(path):
+        for filename in file_name_list:
+            image_path = os.path.join(maindir, filename)
+            image_name, ext = os.path.splitext(image_path)
+            if ext in IMAGE_EXT:
+                if layer is None:
+                    image_list.append(image_path)
+                elif len(layer) < 3:
+                    image_layer = int(image_name.split('_')[-1])
+                    layer_range = [i for i in range(layer[0], layer[-1]+1)]
+                    if image_layer in layer_range:
+                        image_list.append(image_path)
+    return image_list
+
+
+def image_demo(predictor, vis_folder, xml_folder, path, layer, current_time, save_result, save_xml):
     if os.path.isdir(path):
-        files = get_image_list(path)
+        files = get_image_list(path, layer)
     else:
         files = [path]
     files.sort()
@@ -206,6 +225,7 @@ def main(exp, args):
                 vis_folder=vis_folder, 
                 xml_folder=xml_folder,
                 path=args.path, 
+                layer=args.layer,
                 current_time=current_time, 
                 save_result=args.save_result,
                 save_xml=args.save_xml,
