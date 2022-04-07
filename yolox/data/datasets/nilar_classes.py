@@ -5,7 +5,11 @@ NILAR_CLASSES = (
     # "NoDefects",
 	"Crack",
 	"ElectrodeResidue",
-	"BitPlate",
+	# "BitPlate",
 	"FiberOnEdge",
 	"RobotArm",
+	"MissingPiece",
+	"OntopRidge",
+	"SealingDirt",
+	# "PieceOnEdge",
 )
