@@ -243,6 +243,10 @@ class Trainer:
             loss_str = ", ".join(
                 ["{}: {:.1f}".format(k, v.latest) for k, v in loss_meter.items()]
             )
+            if self.rank == 0:
+                if self.args.logger == "tensorboard":
+                    for k, v in loss_meter.items():
+                        self.tblogger.add_scalar("train/" + k, v.latest, self.epoch + 1)
 
             time_meter = self.meter.get_filtered_meter("time")
             time_str = ", ".join(
