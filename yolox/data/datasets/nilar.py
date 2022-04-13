@@ -5,6 +5,7 @@ import os
 import cv2
 import numpy as np
 import pickle
+from loguru import logger
 
 from yolox.evaluators.voc_eval import voc_eval
 
@@ -58,9 +59,24 @@ class NilarDefectsDetection(VOCDetection):
 
 # 		return img
 
+	def evaluate_detections(self, all_boxes, output_dir=None):
+		self._write_voc_results_file(all_boxes)
+		IouTh = np.linspace(0.5, 0.95, int(np.round((0.95 - 0.5) / 0.05)) + 1, endpoint=True)
+		mAPs = []
+		for iou in IouTh:
+			mAP = self._do_python_eval(output_dir, iou)
+			mAPs.append(mAP)
+
+		print("--------------------------------------------------------------")
+		print("map_5095:", np.mean(mAPs))
+		print("map_50:", mAPs[0])
+		print("--------------------------------------------------------------")
+		logger.info("mAP_50: {}, \t mAP_5095: {}".format(mAPs[0], np.mean(mAPs)))
+		return np.mean(mAPs), mAPs[0]
+
 	def _get_voc_results_file_template(self):
 		filename = "comp4_det_test" + "_{:s}.txt"
-		filedir = os.path.join(self.root, "results", "Main")
+		filedir = os.path.join(self.root, "results", "comp4_det_test")
 		if not os.path.exists(filedir):
 			os.makedirs(filedir)
 		filepath = os.path.join(filedir, filename)
@@ -81,13 +97,13 @@ class NilarDefectsDetection(VOCDetection):
 					for k in range(dets.shape[0]):
 						f.write(
 							"{:s} {:.3f} {:.1f} {:.1f} {:.1f} {:.1f}\n".format(
-                                index,
-                                dets[k, -1], # confidence
-                                dets[k, 0] + 1, # xmin
-                                dets[k, 1] + 1, # ymin
-                                dets[k, 2] + 1, # xmax
-                                dets[k, 3] + 1, # ymax
-                            )
+								index,
+								dets[k, -1], # confidence
+								dets[k, 0] + 1, # xmin
+								dets[k, 1] + 1, # ymin
+								dets[k, 2] + 1, # xmax
+								dets[k, 3] + 1, # ymax
+							)
 						)
 
 	def _do_python_eval(self, output_dir="output", iou=0.5):
