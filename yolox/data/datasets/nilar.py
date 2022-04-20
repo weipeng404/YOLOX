@@ -71,7 +71,7 @@ class NilarDefectsDetection(VOCDetection):
 		print("map_5095:", np.mean(mAPs))
 		print("map_50:", mAPs[0])
 		print("--------------------------------------------------------------")
-		logger.info("mAP_50: {}, \t mAP_5095: {}".format(mAPs[0], np.mean(mAPs)))
+		logger.info("mAP_50: {}, mAP_5095: {}".format(mAPs[0], np.mean(mAPs)))
 		return np.mean(mAPs), mAPs[0]
 
 	def _get_voc_results_file_template(self):
@@ -137,7 +137,8 @@ class NilarDefectsDetection(VOCDetection):
 				with open(os.path.join(output_dir, cls + "_pr.pkl"), "wb") as f:
 					pickle.dump({"rec": rec, "prec": prec, "ap": ap}, f)
 
-		if iou == 0.5:
+		if iou == 0.5: 
+			logger.info("APs with IoU=0.5: \n{}".format(aps))
 			print("For IoU = 0.5, mAP = {:.4f}".format(np.mean(aps)))
 			print("----------")
 			print("Results:")
