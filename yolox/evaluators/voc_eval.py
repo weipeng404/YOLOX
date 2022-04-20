@@ -176,7 +176,8 @@ def voc_eval(
         # compute precision recall
     fp = np.cumsum(fp)
     tp = np.cumsum(tp)
-    rec = tp / float(npos)
+    # rec = tp / float(npos) # recall will be nan if the number of a class is 0
+    rec = tp / np.maximum(float(npos), np.finfo(np.float64).eps)
     # avoid divide by zero in case the first detection matches a difficult
     # ground truth
     prec = tp / np.maximum(tp + fp, np.finfo(np.float64).eps)
