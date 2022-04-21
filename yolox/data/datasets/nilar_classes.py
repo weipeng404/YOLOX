@@ -12,5 +12,5 @@ NILAR_CLASSES = (
 	"SealingDirt",
 	"WronglyCut",
 	"PieceOnEdge",
-	"SkewPlate",
+	"PlateOnGroove3",
 )
