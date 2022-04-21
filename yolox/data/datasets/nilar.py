@@ -40,7 +40,7 @@ class NilarDefectsDetection(VOCDetection):
 		self.preproc = preproc
 		self.target_transform = target_transform
 		self._annopath = os.path.join("%s", "Annotations", "%s.xml") # eg. data_dir/Annotations/2021-10-02/OK_cropped_layer2/E1210-21395340_2.xml
-		self._imgpath = os.path.join("%s", "Images", "%s.bmp") # eg. data_dir/Images/2021-10-02/OK_cropped_layer2/E1210-21395340_2.bmp
+		self._imgpath = os.path.join("%s", "Images", "%s.png") # eg. data_dir/Images/2021-10-02/OK_cropped_layer2/E1210-21395340_2.png
 		self._classes = NILAR_CLASSES
 		self.ids = list()
 
