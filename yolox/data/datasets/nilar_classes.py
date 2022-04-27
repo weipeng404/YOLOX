@@ -8,9 +8,9 @@ NILAR_CLASSES = (
 	"FiberOnEdge",
 	"RobotArm",
 	"MissingPiece",
-	"OnTopRidge",
+	"SeparatorOnRidge",
 	"SealingDirt",
-	"WronglyCut",
-	"PieceOnEdge",
-	"PlateOnGroove3",
+	"SeparatorWronglyCut",
+	"SeparatorPiece",
+	"BiplateOnRidge3",
 )
