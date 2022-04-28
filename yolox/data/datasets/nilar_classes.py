@@ -13,4 +13,5 @@ NILAR_CLASSES = (
 	"SeparatorWronglyCut",
 	"SeparatorPiece",
 	"BiplateOnRidge3",
+	"SeparatorFolded",
 )
