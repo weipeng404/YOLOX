@@ -12,9 +12,12 @@ class Exp(MyExp):
     def __init__(self):
         super(Exp, self).__init__()
         self.num_classes = 20
+        self.input_size = (960, 1920)
+        self.test_size = (960, 1920)
         self.depth = 0.33
         self.width = 0.50
         self.warmup_epochs = 1
+        # self.max_epoch = 5
 
         # ---------- transform config ------------ #
         self.mosaic_prob = 1.0
@@ -26,7 +29,8 @@ class Exp(MyExp):
 
     def get_data_loader(self, batch_size, is_distributed, no_aug=False, cache_img=False):
         from yolox.data import (
-            VOCDetection,
+            # VOCDetection,
+            NilarDefectsDetection,
             TrainTransform,
             YoloBatchSampler,
             DataLoader,
@@ -41,15 +45,14 @@ class Exp(MyExp):
         local_rank = get_local_rank()
 
         with wait_for_the_master(local_rank):
-            dataset = VOCDetection(
-                data_dir=os.path.join(get_yolox_datadir(), "VOCdevkit"),
-                image_sets=[('2007', 'trainval'), ('2012', 'trainval')],
-                img_size=self.input_size,
+            dataset = NilarDefectsDetection(
+                data_dir = get_yolox_datadir(),
+                image_set = [('Cropped', 'train')],
+                img_size = self.input_size,
                 preproc=TrainTransform(
                     max_labels=50,
                     flip_prob=self.flip_prob,
                     hsv_prob=self.hsv_prob),
-                cache=cache_img,
             )
 
         dataset = MosaicDetection(
@@ -97,12 +100,12 @@ class Exp(MyExp):
         return train_loader
 
     def get_eval_loader(self, batch_size, is_distributed, testdev=False, legacy=False):
-        from yolox.data import VOCDetection, ValTransform
+        from yolox.data import NilarDefectsDetection, ValTransform#, VOCDetection
 
-        valdataset = VOCDetection(
-            data_dir=os.path.join(get_yolox_datadir(), "VOCdevkit"),
-            image_sets=[('2007', 'test')],
-            img_size=self.test_size,
+        valdataset = NilarDefectsDetection(
+            data_dir = get_yolox_datadir(),
+            image_set = [('Cropped', 'val')],
+            img_size = self.input_size,
             preproc=ValTransform(legacy=legacy),
         )
 
