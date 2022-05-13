@@ -9,3 +9,4 @@ from .mosaicdetection import MosaicDetection
 from .voc import VOCDetection
 from .nilar_classes import NILAR_CLASSES
 from .nilar import NilarDefectsDetection
+from .nilar_casing import NilarCasingDetection
