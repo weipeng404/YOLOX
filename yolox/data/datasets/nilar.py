@@ -26,11 +26,11 @@ class NilarDefectsDetection(VOCDetection):
 	def __init__(
 		self, 
 		data_dir, 
-		image_set,
-		img_size = (960, 1920),
-		preproc = None,
-		target_transform = AnnotationTransform(
-			class_to_ind = dict(zip(NILAR_CLASSES, range(len(NILAR_CLASSES))))
+		image_set=[("Original", "train")],
+		img_size=(960, 1920),
+		preproc=None,
+		target_transform=AnnotationTransform(
+			class_to_ind=dict(zip(NILAR_CLASSES, range(len(NILAR_CLASSES))))
 			),
 	):
 		super(VOCDetection, self).__init__(img_size)
@@ -39,15 +39,17 @@ class NilarDefectsDetection(VOCDetection):
 		self.img_size = img_size
 		self.preproc = preproc
 		self.target_transform = target_transform
-		self._annopath = os.path.join("%s", "Annotations", "%s.xml") # eg. data_dir/Annotations/2021-10-02/OK_cropped_layer2/E1210-21395340_2.xml
-		self._imgpath = os.path.join("%s", "Images", "%s.png") # eg. data_dir/Images/2021-10-02/OK_cropped_layer2/E1210-21395340_2.png
+		self._annopath = os.path.join("%s", "Annotations", "%s.xml") # eg. data_dir/Annotations/2021-10-02/OK_cropped/E1210-21395340_2.xml
+		self._imgpath = os.path.join("%s", "Images", "%s.png") # eg. data_dir/Images/2021-10-02/OK_cropped/E1210-21395340_2.png
 		self._classes = NILAR_CLASSES
 		self.ids = list()
 
-		for line in open(
-			os.path.join(self.root, "ImageSets", "Main", self.image_set + ".txt")
-		):
-			self.ids.append((self.root, line.strip()))
+		for (dataset_name, name) in image_set:
+			self.dataset_name = dataset_name
+			for line in open(
+				os.path.join(self.root, "ImageSets", dataset_name, name + ".txt")
+			):
+				self.ids.append((self.root, line.strip()))
 
 		self.annotations = [self.load_anno_from_ids(_id) for _id in range(len(self.ids))]
 		self.imgs = None
@@ -108,8 +110,9 @@ class NilarDefectsDetection(VOCDetection):
 
 	def _do_python_eval(self, output_dir="output", iou=0.5):
 		annopath = os.path.join(self.root, "Annotations", "{:s}.xml")
-		imagesetfile = os.path.join(self.root, "ImageSets", "Main", self.image_set + ".txt")
-		cachedir = os.path.join(self.root, "annotation_cache", self.image_set)
+		name = self.image_set[0][1]
+		imagesetfile = os.path.join(self.root, "ImageSets", self.dataset_name, name + ".txt")
+		cachedir = os.path.join(self.root, "annotation_cache", self.dataset_name, name)
 		if not os.path.exists(cachedir):
 			os.makedirs(cachedir)
 
