@@ -6,7 +6,7 @@ import cv2
 from .nilar import NilarDefectsDetection
 from .voc import AnnotationTransform
 
-CASING_CLASS = ("casing")
+CASING_CLASS = ("casing",)
 
 class NilarCasingDetection(NilarDefectsDetection):
 	"""
@@ -19,7 +19,7 @@ class NilarCasingDetection(NilarDefectsDetection):
 		img_size=(1920, 2560),
 		preproc=None,
 		target_transform=AnnotationTransform(
-			class_to_ind=dict({CASING_CLASS: 0})
+			class_to_ind=dict(zip(CASING_CLASS, range(len(CASING_CLASS))))
 		)
 	):
 		super(NilarCasingDetection, self).__init__(

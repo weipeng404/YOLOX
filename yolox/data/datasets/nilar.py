@@ -26,14 +26,15 @@ class NilarDefectsDetection(VOCDetection):
 	def __init__(
 		self, 
 		data_dir, 
-		image_set=[("Original", "train")],
+		image_set=[("Cropped", "train")],
 		img_size=(960, 1920),
 		preproc=None,
 		target_transform=AnnotationTransform(
 			class_to_ind=dict(zip(NILAR_CLASSES, range(len(NILAR_CLASSES))))
-			),
+		),
 	):
 		super(VOCDetection, self).__init__(img_size)
+		# super(NilarDefectsDetection, self).__init__(data_dir)
 		self.root = data_dir
 		self.image_set = image_set
 		self.img_size = img_size
@@ -85,7 +86,7 @@ class NilarDefectsDetection(VOCDetection):
 		return filepath
 
 	def _write_voc_results_file(self, all_boxes):
-		for cls_ind, cls in enumerate(NILAR_CLASSES):
+		for cls_ind, cls in enumerate(self._classes):
 			# if cls == "NoDefects":
 			# 	continue
 			print("Writing {} VOC results file.".format(cls))
@@ -120,7 +121,7 @@ class NilarDefectsDetection(VOCDetection):
 		print("Eval IoU: {:.2f}".format(iou))
 		if output_dir is not None and not os.path.isdir(output_dir):
 			os.mkdir(output_dir)
-		for i, cls in enumerate(NILAR_CLASSES):
+		for i, cls in enumerate(self._classes):
 			# if cls == "NoDefects":
 			# 	continue
 			filepath = self._get_voc_results_file_template().format(cls)
@@ -145,7 +146,7 @@ class NilarDefectsDetection(VOCDetection):
 			print("For IoU = 0.5, mAP = {:.4f}".format(np.mean(aps)))
 			print("----------")
 			print("Results:")
-			for i, cls in enumerate(NILAR_CLASSES):
+			for i, cls in enumerate(self._classes):
 				print("AP for {:s}:\t{:.3f}".format(cls, aps[i]))
 			print("----------")
 

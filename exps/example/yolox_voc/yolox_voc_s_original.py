@@ -12,12 +12,12 @@ class Exp(MyExp):
     def __init__(self):
         super(Exp, self).__init__()
         self.num_classes = 5
-        self.input_size = (1920, 2560) # (480, 640), (960, 1280), (1184, 1664), (1440, 1920), (1920, 2560)
-        self.test_size = (1920, 2560) # (480, 640), (960, 1280), (1184, 1664), (1440, 1920), (1920, 2560)
+        self.input_size = (480, 640) # (480, 640), (960, 1280), (1184, 1664), (1440, 1920), (1920, 2560)
+        self.test_size = (480, 640) # (480, 640), (960, 1280), (1184, 1664), (1440, 1920), (1920, 2560)
         self.depth = 0.33
         self.width = 0.50
         self.warmup_epochs = 1
-        self.max_epoch = 5
+        self.max_epoch = 100
         # self.data_num_workers = 0
 
         # ---------- transform config ------------ #

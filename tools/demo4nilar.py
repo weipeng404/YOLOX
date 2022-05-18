@@ -190,10 +190,10 @@ def write_xml(xml_folder, image_name, img_info, boxes, cls_conf, class_names):
             if score < cls_conf:
                 continue
 
-            x0 = int(box[0])
-            y0 = int(box[1])
-            x1 = int(box[2])
-            y1 = int(box[3])
+            x0 = round(box[0])
+            y0 = round(box[1])
+            x1 = round(box[2])
+            y1 = round(box[3])
 
             object = etree.Element("object")
             etree.SubElement(object, "name").text=class_name
