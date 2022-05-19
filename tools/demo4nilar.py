@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding:utf-8 -*-
+
 import argparse
 import os
 import time
@@ -11,7 +14,7 @@ import torch
 
 import yolox
 from yolox.data.data_augment import ValTransform
-from yolox.data.datasets import NILAR_CLASSES
+from yolox.data.datasets import NILAR_CLASSES, CASING_CLASS
 from yolox.exp import get_exp
 from yolox.tools.demo import Predictor, image_demo
 from yolox.utils import get_model_info, vis
@@ -20,7 +23,7 @@ IMAGE_EXT = [".jpg", ".jpeg", ".webp", ".bmp", ".png"]
 
 def make_parser():
     parser = argparse.ArgumentParser(description="YOLOX Demo for Nilar!")
-    parser.add_argument("demo", default="image", help="demo type")
+    parser.add_argument("demo", default="image", help="demo input type")
     parser.add_argument("-expn", "--experiment-name", default=None, type=str)
     parser.add_argument("-f", "--exp_file", default="exps/example/yolox_voc/yolox_voc_s.py", type=str, help="experiment description file")
     parser.add_argument("-c", "--ckpt", type=str, help="checkpoint model for evaluation")
@@ -262,24 +265,26 @@ def main(exp, args):
         logger.info("loaded checkpoint file from {}".format(args.ckpt))
         model.load_state_dict(ckpt["model"])
 
+        cls_names = NILAR_CLASSES
+        if args.demo == "image_original":
+            cls_names = CASING_CLASS
         predictor = Predictor(
-            model=model, exp=exp, cls_names=NILAR_CLASSES, trt_file=None, decoder=None,
+            model=model, exp=exp, cls_names=cls_names, trt_file=None, decoder=None,
             device=args.device, fp16=False, legacy=False,
         )
 
-        current_time = time.localtime()
-        if args.demo == "image":
-            image_demo(
+        image_demo(
                 predictor=predictor, 
                 report_folder=report_folder,
                 vis_folder=vis_folder, 
                 xml_folder=xml_folder,
                 path=args.path, 
                 layer=args.layer,
-                current_time=current_time, 
+                current_time=time.localtime(), 
                 save_result=args.save_result,
                 save_xml=args.save_xml,
             )
+
     except Exception as e:
         logger.error(e)
 

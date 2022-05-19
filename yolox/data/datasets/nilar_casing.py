@@ -4,9 +4,8 @@
 import os
 import cv2
 from .nilar import NilarDefectsDetection
+from .nilar_casing_classes import CASING_CLASS
 from .voc import AnnotationTransform
-
-CASING_CLASS = ("casing",)
 
 class NilarCasingDetection(NilarDefectsDetection):
 	"""
