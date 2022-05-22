@@ -8,5 +8,6 @@ from .datasets_wrapper import ConcatDataset, Dataset, MixConcatDataset
 from .mosaicdetection import MosaicDetection
 from .voc import VOCDetection
 from .nilar_classes import NILAR_CLASSES
+from .nilar_casing_classes import CASING_CLASS
 from .nilar import NilarDefectsDetection
 from .nilar_casing import NilarCasingDetection
