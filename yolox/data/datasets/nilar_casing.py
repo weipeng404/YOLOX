@@ -55,3 +55,18 @@ class NilarCasingDetection(NilarDefectsDetection):
 		assert img is not None
 
 		return img
+
+	def evaluate_detections(self, all_boxes, output_dir=None):
+		self._write_voc_results_file(all_boxes)
+		IouTh = np.linspace(0.5, 0.95, int(np.round((0.95 - 0.5) / 0.05)) + 1, endpoint=True)
+		mAPs = []
+		for iou in IouTh:
+			mAP = self._do_python_eval(output_dir, iou)
+			mAPs.append(mAP)
+
+		print("--------------------------------------------------------------")
+		print("map_5095:", np.mean(mAPs))
+		print("map_80:", mAPs[6])
+		print("--------------------------------------------------------------")
+		logger.info("mAP_80: {}, mAP_5095: {}".format(mAPs[6], np.mean(mAPs)))
+		return np.mean(mAPs), mAPs[6]
