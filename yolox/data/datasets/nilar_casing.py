@@ -4,6 +4,7 @@
 import os
 import cv2
 import numpy as np
+from loguru import logger
 from .nilar import NilarDefectsDetection
 from .nilar_casing_classes import CASING_CLASS
 from .voc import AnnotationTransform

@@ -16,7 +16,7 @@ class Exp(MyExp):
         self.test_size = (960, 1920)
         self.depth = 0.33
         self.width = 0.50
-        self.warmup_epochs = 1
+        self.warmup_epochs = 5
         # self.max_epoch = 5
 
         # ---------- transform config ------------ #

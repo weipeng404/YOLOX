@@ -16,8 +16,8 @@ class Exp(MyExp):
         self.test_size = (960, 1280) # (480, 640), (960, 1280), (1184, 1664), (1440, 1920), (1920, 2560)
         self.depth = 0.33
         self.width = 0.50
-        self.warmup_epochs = 1
-        self.max_epoch = 300
+        self.warmup_epochs = 5
+        self.max_epoch = 400
         # self.data_num_workers = 0
         # self.eval_interval = 1
         # self.test_conf = 0.01
