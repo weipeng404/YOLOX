@@ -13,6 +13,7 @@ from lxml import etree
 import torch
 
 import yolox
+from yolox.data import get_yolox_datadir
 from yolox.data.data_augment import ValTransform
 from yolox.data.datasets import NILAR_CLASSES, CASING_CLASS
 from yolox.exp import get_exp
@@ -220,7 +221,8 @@ def write_xml(xml_folder, image_name, img_info, boxes, cls_conf, class_names):
 def main(exp, args):
     if not args.experiment_name:
         args.experiment_name = exp.exp_name
-    file_name = os.path.join(exp.output_dir, args.experiment_name)
+    # file_name = os.path.join(exp.output_dir, args.experiment_name)
+    file_name = os.path.join(get_yolox_datadir(), "results", args.experiment_name)
     os.makedirs(file_name, exist_ok=True)
 
     report_folder = os.path.join(file_name, "report")
@@ -236,7 +238,7 @@ def main(exp, args):
         img_path = os.path.normpath(args.path)
         img_path_list = img_path.split(os.sep)
         img_path_list[img_path_list.index('Images')] = "Annotations"
-        if img_path.endswith('.bmp'):
+        if os.path.splitext(img_path)[-1] in IMAGE_EXT: 
             xml_folder = '/'.join(img_path_list[:-1]) + "_pred"
         else:
             xml_folder = '/'.join(img_path_list) + "_pred"
